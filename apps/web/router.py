@@ -15,6 +15,8 @@ router = APIRouter()
 
 templates = Jinja2Templates(directory=TEMPLATES_DIR)
 
+IncomingDataStoreDep = Annotated[IncomingDataStore, Depends(IncomingDataStore)]
+
 
 @router.get("/", response_class=HTMLResponse)
 async def root(request: Request) -> HTMLResponse:
@@ -47,9 +49,9 @@ def to_sse_msg(status_or_error: ConcentrationStatus | MonitorError) -> str:
 
 @router.get("/monitor")
 async def monitor(
-    store: Annotated[IncomingDataStore, Depends(IncomingDataStore)],
+    store: IncomingDataStoreDep,
 ) -> StreamingResponse:
-    async def generator(store: IncomingDataStore):
+    async def generator(store: IncomingDataStoreDep):
         if store.latest_monitor_msg:
             yield to_sse_msg(store.latest_monitor_msg.payload)
         while True:
