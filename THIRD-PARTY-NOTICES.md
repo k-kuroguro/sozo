@@ -1,4 +1,4 @@
-# Third Party Notices
+# Third-Party Notices
 
 This project includes third-party files listed below, each with its own license.
 
@@ -59,7 +59,7 @@ exhaustive, and do not form part of our licenses.
      such as asking that all changes be marked or described.
      Although not required by our licenses, you are encouraged to
      respect those requests where reasonable. More considerations
-     for the public: 
+     for the public:
 	wiki.creativecommons.org/Considerations_for_licensees
 
 =======================================================================
