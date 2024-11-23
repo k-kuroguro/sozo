@@ -9,7 +9,7 @@ from .constants import LANDMARKS_NUM
 
 
 class Face(NamedTuple):
-    """Represents a detected face.
+    """Represent a detected face.
 
     Attributes:
         x (int): The x-coordinate of the top-left corner of the bbox.
@@ -27,7 +27,7 @@ class Face(NamedTuple):
 
     @property
     def area(self) -> int:
-        """Calculates the area of the bbox.
+        """Calculate the area of the bbox.
 
         Returns:
             int: The area of the bbox.
@@ -36,7 +36,7 @@ class Face(NamedTuple):
 
 
 class HeadPose(NamedTuple):
-    """Represents the 3d head pose.
+    """Represent the 3d head pose.
 
     Attributes:
         yaw (float): The yaw angle in degrees, representing left-right rotation.
@@ -49,7 +49,7 @@ class HeadPose(NamedTuple):
     roll: float
 
     def to_direction(self) -> HeadDirection:
-        """Converts to the 2D head direction.
+        """Convert to the 2D head direction.
 
         Returns:
             HeadDirection: The 2D head direction.

@@ -17,8 +17,7 @@ class FacialLandmarksDetector:
         self._detector = dlib.shape_predictor(model_path)
 
     def detect(self, gray_image: MatLike, face: Face) -> FacialLandmarks2d:
-        """
-        Detects facial landmarks from the given grayscale image and face.
+        """Detect facial landmarks from the given grayscale image and face.
 
         Args:
             gray_image (MatLike): The grayscale OpenCV image.
@@ -28,5 +27,5 @@ class FacialLandmarksDetector:
             FacialLandmarks2d: The detected facial landmarks.
         """
         x, y, w, h, _ = face
-        landmarks = self._detector(gray_image,  dlib.rectangle(x, y, x + w, y + h))
+        landmarks = self._detector(gray_image, dlib.rectangle(x, y, x + w, y + h))
         return FacialLandmarks2d(face_utils.shape_to_np(landmarks))

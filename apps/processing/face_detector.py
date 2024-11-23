@@ -25,8 +25,7 @@ class FaceDetector:
         self._confidence_threshold = confidence_threshold
 
     def detect(self, image: MatLike) -> list[Face]:
-        """
-        Detects faces in the provided image.
+        """Detect faces in the provided image.
 
         The image is resized before being passed into the DNN.
         Detected faces with a confidence score greater than the specified threshold are returned.

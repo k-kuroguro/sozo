@@ -20,7 +20,7 @@ class TimestampedConcentrationStatus:
 
 
 class PeriodicAggregator:
-    """Aggregates concentration status data periodically and saves to DB."""
+    """Aggregate concentration status data periodically and saves to DB."""
 
     _INTERVAL_MINUTES = 5
     _INTERVAL_SECONDS = _INTERVAL_MINUTES * 60
@@ -50,7 +50,7 @@ class PeriodicAggregator:
         self._buffer: Deque[TimestampedConcentrationStatus] = deque()
 
     def start(self) -> None:
-        """Begins the aggregation process.
+        """Begin the aggregation process.
 
         Raises:
             RuntimeError: If the aggregator is already running.

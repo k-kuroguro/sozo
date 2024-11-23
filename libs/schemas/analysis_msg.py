@@ -3,7 +3,7 @@ from dataclasses import dataclass
 
 @dataclass(slots=True, frozen=True)
 class HeadDirection:
-    """Represents a normalized 2D head direction.
+    """Represent a normalized 2D head direction.
 
     Attributes:
         x (float): The x component of the direction.
@@ -16,7 +16,7 @@ class HeadDirection:
 
 @dataclass(slots=True, frozen=True)
 class AnalysisMsg:
-    """Represents an analysis result.
+    """Represent an analysis result.
 
     Attributes:
         head_direction (HeadDirection): The detected head direction.

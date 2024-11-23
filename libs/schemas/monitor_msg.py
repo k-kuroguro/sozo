@@ -5,7 +5,7 @@ from enum import Enum, auto
 
 @dataclass(slots=True, frozen=True)
 class ConcentrationStatus:
-    """Represents the mearured concentration score
+    """Represent the mearured concentration score
 
     Args:
         overall_score (float): Overall concentration score, where a higher value indicates better concentration.
@@ -18,7 +18,7 @@ class ConcentrationStatus:
 
 @dataclass(slots=True, frozen=True)
 class MonitorError:
-    """Represents an error in measurement.
+    """Represent an error in measurement.
 
     Args:
         type (Type): Type of the error.
@@ -40,7 +40,7 @@ Payload = ConcentrationStatus | MonitorError
 
 @dataclass(slots=True, frozen=True)
 class MonitorMsg:
-    """Represents a monitoring result or error.
+    """Represent a monitoring result or error.
 
     Args:
         timestamp (datetime): Timestamp indicating when the monitoring result was recorded.
