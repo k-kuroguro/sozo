@@ -25,6 +25,15 @@ class IncomingDataStore:
         self._changed_event = Event()
 
     async def wait_for_change(self, timeout: float | None = None) -> bool:
+        """Wait for the data to change.
+
+        Args:
+            timeout (float | None, optional): The maximum time (in seconds) to wait for the event. If `None`, waits indefinitely.
+
+        Returns:
+            bool: `True` if the event was set within the timeout period, `False` if the timeout was reached.
+        """
+
         try:
             return await wait_for(self._changed_event.wait(), timeout)
         except TimeoutError:
