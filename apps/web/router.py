@@ -48,14 +48,14 @@ def to_sse_msg(status_or_error: ConcentrationStatus | MonitorError) -> str:
 
 
 @router.get("/monitor")
-async def monitor(
+def monitor(
     store: IncomingDataStoreDep,
 ) -> StreamingResponse:
-    async def generator(store: IncomingDataStoreDep):
+    def generator(store: IncomingDataStoreDep):
         if store.latest_monitor_msg:
             yield to_sse_msg(store.latest_monitor_msg.payload)
         while True:
-            await store.wait_for_change()
+            store.wait_for_change()
             if store.latest_monitor_msg:
                 yield to_sse_msg(store.latest_monitor_msg.payload)
 

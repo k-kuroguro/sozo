@@ -1,5 +1,4 @@
-from asyncio import Event, TimeoutError, wait_for
-from threading import Lock
+from threading import Event, Lock
 
 from libs.schemas.monitor_msg import MonitorMsg
 
@@ -24,7 +23,7 @@ class IncomingDataStore:
         self._latest_monitor_msg: MonitorMsg | None = None
         self._changed_event = Event()
 
-    async def wait_for_change(self, timeout: float | None = None) -> bool:
+    def wait_for_change(self, timeout: float | None = None) -> bool:
         """Wait for the data to change.
 
         Args:
@@ -33,11 +32,7 @@ class IncomingDataStore:
         Returns:
             bool: `True` if the event was set within the timeout period, `False` if the timeout was reached.
         """
-
-        try:
-            return await wait_for(self._changed_event.wait(), timeout)
-        except TimeoutError:
-            return False
+        return self._changed_event.wait(timeout)
 
     @property
     def latest_monitor_msg(self) -> MonitorMsg | None:
