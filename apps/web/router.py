@@ -1,14 +1,18 @@
 from dataclasses import fields
+from datetime import date, datetime, timedelta
 from enum import Enum
-from typing import Annotated
+from typing import Annotated, Sequence
 
 from fastapi import APIRouter, Depends, Request
 from fastapi.responses import HTMLResponse, StreamingResponse
 from fastapi.templating import Jinja2Templates
+from sqlmodel import Session, select
 
 from libs.schemas.monitor_msg import ConcentrationStatus, MonitorError
 
 from .constants import TEMPLATES_DIR
+from .database import get_session_generator
+from .schemas import AggregatedConcentrationStatus
 from .store import IncomingDataStore
 
 router = APIRouter()
@@ -64,3 +68,26 @@ def monitor(
         media_type="text/event-stream",
         headers={"Connection": "keep-alive", "Cache-Control": "no-cache"},
     )
+
+
+@router.get("/status/by-date", response_model=Sequence[AggregatedConcentrationStatus])
+def get_status_by_date(
+    target_date: date, session: Annotated[Session, Depends(get_session_generator)]
+) -> Sequence[AggregatedConcentrationStatus]:
+    statement = select(AggregatedConcentrationStatus).where(
+        AggregatedConcentrationStatus.start_time >= target_date,
+        AggregatedConcentrationStatus.end_time <= target_date + timedelta(days=1),
+    )
+    return session.exec(statement).all()
+
+
+@router.get("/status/by-hour", response_model=Sequence[AggregatedConcentrationStatus])
+def get_status_by_hour(
+    target_hour: datetime, session: Annotated[Session, Depends(get_session_generator)]
+) -> Sequence[AggregatedConcentrationStatus]:
+    target_hour = target_hour.replace(minute=0, second=0, microsecond=0)
+    statement = select(AggregatedConcentrationStatus).where(
+        AggregatedConcentrationStatus.start_time >= target_hour,
+        AggregatedConcentrationStatus.end_time <= target_hour + timedelta(hours=1),
+    )
+    return session.exec(statement).all()
