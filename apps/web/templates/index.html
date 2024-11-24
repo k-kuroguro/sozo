@@ -4,11 +4,25 @@
    <meta charset="utf-8">
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
    <link rel="stylesheet" href="/static/css/default.css">
+   <script src="https://cdn.jsdelivr.net/npm/chart.js@3.5.0/dist/chart.min.js" defer></script>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment.js" defer></script>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/locale/ja.js" defer></script>
+   <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-moment@1.0.0" defer></script>
    <script src="/static/js/index.js" defer></script>
-   <title>Sample</title>
+   <title>Sample Page</title>
 </head>
 
 <body>
-   <h1>Sample</h1>
+   <h1>Realtime Score</h1>
    <div id="score"></div>
+   <h1>Record</h1>
+   <canvas id="statusChart" width="400" height="200"></canvas>
+   <div>
+      <label><input type="radio" name="unit" value="by-date" id="by-date" checked>By date</label>
+      <label><input type="radio" name="unit" value="by-hour" id="by-hour">By hour</label>
+   </div>
+   <div>
+      <input type="datetime-local" id="datetime" value="2021-01-01T00:00:00">
+   </div>
+   <button id="plotBtn">Plot</button>
 </body>
