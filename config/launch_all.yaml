@@ -1,0 +1,25 @@
+web:
+  enabled: true
+  parameters:
+    host: "0.0.0.0"
+    port: 8080
+    monitor_subscriber_addr: "/tmp/sozo"
+    monitor_topic: "monitoring"
+
+local:
+  enabled: true
+  parameters:
+    monitor_publisher_addr: "/tmp/sozo"
+    monitor_topic: "monitoring"
+    frame_publisher_addr: "/tmp/sozo"
+    frame_topic: "frame"
+    analysis_subscriber_addr: "/tmp/sozo"
+    analysis_topic: "analysis"
+
+processing:
+  enabled: true
+  parameters:
+    frame_subscriber_addr: "/tmp/sozo"
+    frame_topic: "frame"
+    analysis_publisher_addr: "/tmp/sozo"
+    analysis_topic: "analysis"
