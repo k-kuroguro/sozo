@@ -3,6 +3,7 @@ import time
 from datetime import datetime
 
 import cv2
+import numpy as np
 
 from libs.ipc import BasePublisher, BaseSubscriber
 from libs.schemas.analysis_msg import AnalysisMsg
@@ -12,6 +13,7 @@ from .constants import MODELS_DIR
 from .face_detector import FaceDetector
 from .facial_landmarks_detector import FacialLandmarksDetector
 from .head_pose_estimator import HeadPoseEstimator
+from .schemas import HeadPose
 
 SLEEP_INTERVAL = 0.01
 
@@ -70,17 +72,15 @@ class App:
 
             if not self._head_pose_estimator.is_image_size_set():
                 self._head_pose_estimator.set_image_size(*frame.shape[:2])
-            pose = self._head_pose_estimator.estimate(landmarks).to_direction()
+            pose = self._head_pose_estimator.estimate(landmarks)
 
             nose_tip_2d = landmarks[30]
-            end_point = (
-                int(nose_tip_2d[0] + pose.x * 20),
-                int(nose_tip_2d[1] + pose.y * 20),
-            )
+            pose_2d = self.project_pose(pose)
+            end_point = (nose_tip_2d + np.array(pose_2d) * 20).astype(int)
             cv2.arrowedLine(frame, tuple(nose_tip_2d), end_point, (0, 0, 255), 2)
 
             self._analysis_msg_publisher.publish(
-                AnalysisMsg(timestamp=datetime.now(), head_direction=pose)
+                AnalysisMsg(timestamp=datetime.now(), head_direction=pose.to_direction())
             )
 
         curr_time = time.time()
@@ -94,3 +94,9 @@ class App:
 
         cv2.imshow("frame", frame)
         cv2.waitKey(1)
+
+    @staticmethod
+    def project_pose(pose: HeadPose) -> tuple[float, float]:
+        x, y = np.sin(np.radians(pose.yaw)), -np.sin(np.radians(pose.pitch))
+        norm = np.linalg.norm((x, y))
+        return (float(x / norm), float(y / norm))

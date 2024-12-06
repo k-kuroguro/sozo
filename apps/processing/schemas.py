@@ -49,14 +49,7 @@ class HeadPose(NamedTuple):
     roll: float
 
     def to_direction(self) -> HeadDirection:
-        """Convert to the 2D head direction.
-
-        Returns:
-            HeadDirection: The 2D head direction.
-        """
-        x, y = np.sin(np.radians(self.yaw)), -np.sin(np.radians(self.pitch))
-        norm = np.linalg.norm((x, y))
-        return HeadDirection(float(x / norm), float(y / norm))
+        return HeadDirection(x=self.yaw, y=self.pitch)
 
 
 class FacialLandmarks2d(np.ndarray):

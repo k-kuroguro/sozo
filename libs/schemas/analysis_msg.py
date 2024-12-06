@@ -4,11 +4,11 @@ from datetime import datetime
 
 @dataclass(slots=True, frozen=True)
 class HeadDirection:
-    """Represent a normalized 2D head direction.
+    """Represents the direction of the head in terms of horizontal and vertical angles in degrees.
 
     Attributes:
-        x (float): The x component of the direction.
-        y (float): The y component of the direction.
+        x (float): Horizontal angle (deg) of the head, where positive values indicate rightward rotation.
+        y (float): Vertical angle (deg) of the head, where positive values indicate upward tilt.
     """
 
     x: float
