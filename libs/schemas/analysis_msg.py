@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from datetime import datetime
 
 
 @dataclass(slots=True, frozen=True)
@@ -22,4 +23,5 @@ class AnalysisMsg:
         head_direction (HeadDirection): The detected head direction.
     """
 
+    timestamp: datetime
     head_direction: HeadDirection

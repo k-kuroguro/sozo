@@ -1,5 +1,6 @@
 import os
 import time
+from datetime import datetime
 
 import cv2
 
@@ -78,7 +79,9 @@ class App:
             )
             cv2.arrowedLine(frame, tuple(nose_tip_2d), end_point, (0, 0, 255), 2)
 
-            self._analysis_msg_publisher.publish(AnalysisMsg(pose))
+            self._analysis_msg_publisher.publish(
+                AnalysisMsg(timestamp=datetime.now(), head_direction=pose)
+            )
 
         curr_time = time.time()
         elapsed_time = curr_time - self._prev_time
