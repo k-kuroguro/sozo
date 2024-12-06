@@ -24,4 +24,5 @@ class AnalysisMsg:
     """
 
     timestamp: datetime
-    head_direction: HeadDirection
+    is_absent: bool
+    head_direction: HeadDirection | None

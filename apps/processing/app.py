@@ -80,7 +80,13 @@ class App:
             cv2.arrowedLine(frame, tuple(nose_tip_2d), end_point, (0, 0, 255), 2)
 
             self._analysis_msg_publisher.publish(
-                AnalysisMsg(timestamp=datetime.now(), head_direction=pose.to_direction())
+                AnalysisMsg(
+                    timestamp=datetime.now(), is_absent=False, head_direction=pose.to_direction()
+                )
+            )
+        else:
+            self._analysis_msg_publisher.publish(
+                AnalysisMsg(timestamp=datetime.now(), is_absent=True, head_direction=None)
             )
 
         curr_time = time.time()
