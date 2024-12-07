@@ -65,8 +65,8 @@ class App:
 
         if faces:
             gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-            largest_face = max(faces, key=lambda f: f.area)
-            landmarks = self._facial_landmarks_detector.detect(gray, largest_face)
+            max_conf_face = max(faces, key=lambda x: x.confidence)
+            landmarks = self._facial_landmarks_detector.detect(gray, max_conf_face)
 
             for x, y in landmarks:
                 cv2.circle(frame, (x, y), 1, (0, 0, 255), -1)
