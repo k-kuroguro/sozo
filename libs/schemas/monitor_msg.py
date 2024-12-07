@@ -5,7 +5,7 @@ from enum import Enum, auto
 
 @dataclass(slots=True, frozen=True)
 class ConcentrationStatus:
-    """Represent the mearured concentration score
+    """Represent the mearured concentration score.
 
     Args:
         overall_score (float): Overall concentration score, where a higher value indicates better concentration.
