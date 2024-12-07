@@ -24,8 +24,6 @@ class App:
         self,
         frame_subscriber: BaseSubscriber[MatLike],
         analysis_msg_publisher: BasePublisher[AnalysisMsg],
-        *,
-        max_buffer_size: int = 3,
     ) -> None:
         self._frame_subscriber = frame_subscriber
         self._analysis_msg_publisher = analysis_msg_publisher
