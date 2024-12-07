@@ -20,6 +20,11 @@ class LocalParameters:
     analysis_subscriber_addr: str
     analysis_topic: str
     video_path_or_device_id: str | int = 0
+    max_buffer_size: int = 10
+    ear_threshold: float = 0.25
+    looking_away_x_threshold: float = 25.0
+    looking_away_penalty: float = 50.0
+    head_direction_std_weight: float = 50.0
 
 
 @dataclass(slots=True, frozen=True)

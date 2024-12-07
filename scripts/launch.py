@@ -25,7 +25,7 @@ def main() -> None:
     analysis_msg_serializer = AnalysisMsgSerializer()
     frame_serializer = ImageSerializer()
 
-    apps = []
+    apps: list = []
 
     if config.web.enabled:
         web_params = config.web.parameters
@@ -59,6 +59,11 @@ def main() -> None:
             frame_publisher,
             analysis_msg_subscriber,
             video_path_or_device_id=local_params.video_path_or_device_id,
+            max_buffer_size=local_params.max_buffer_size,
+            ear_threshold=local_params.ear_threshold,
+            looking_away_x_threshold=local_params.looking_away_x_threshold,
+            looking_away_penalty=local_params.looking_away_penalty,
+            head_direction_std_weight=local_params.head_direction_std_weight,
         )
         apps.append((local_app, {}))
 

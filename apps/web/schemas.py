@@ -10,4 +10,3 @@ class AggregatedConcentrationStatus(SQLModel, table=True):
     start_time: datetime = Field(index=True, unique=True)
     end_time: datetime = Field(index=True, unique=True)
     overall_score: float
-    sleeping_confidence: float

@@ -128,14 +128,10 @@ class PeriodicAggregator:
 
         data_len = len(data)
         overall_score = sum(status.status.overall_score for status in data) / data_len
-        sleeping_confidence = sum(status.status.sleeping_confidence for status in data) / data_len
 
         session.add(
             AggregatedConcentrationStatus(
-                start_time=start_time,
-                end_time=end_time,
-                overall_score=overall_score,
-                sleeping_confidence=sleeping_confidence,
+                start_time=start_time, end_time=end_time, overall_score=overall_score
             )
         )
         session.commit()

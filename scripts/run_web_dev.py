@@ -5,7 +5,7 @@ from threading import Thread
 
 from apps.web import App
 from libs.ipc import BaseSubscriber
-from libs.schemas.monitor_msg import ConcentrationStatus, MonitorMsg
+from libs.schemas.monitor_msg import ConcentrationStatus, MonitorMsg, PenaltyFactor
 from libs.types import Callback
 
 
@@ -25,7 +25,7 @@ class FakeSubscriber(BaseSubscriber[MonitorMsg]):
                 timestamp=datetime.datetime.now(),
                 payload=ConcentrationStatus(
                     overall_score=random(),
-                    sleeping_confidence=random(),
+                    penalty_factor=PenaltyFactor.NONE,
                 ),
             )
             callback(msg)

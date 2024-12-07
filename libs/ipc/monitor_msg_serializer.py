@@ -2,7 +2,7 @@ from datetime import datetime
 
 from msgspec.msgpack import Decoder, Encoder
 
-from libs.schemas.monitor_msg import ConcentrationStatus, MonitorError, MonitorMsg
+from libs.schemas.monitor_msg import ConcentrationStatus, MonitorError, MonitorMsg, PenaltyFactor
 
 from .base_serializer import BaseSerializer
 
@@ -25,7 +25,7 @@ class MonitorMsgSerializer(BaseSerializer[MonitorMsg]):
         if "overall_score" in d["payload"]:
             payload = ConcentrationStatus(
                 overall_score=d["payload"]["overall_score"],
-                sleeping_confidence=d["payload"]["sleeping_confidence"],
+                penalty_factor=PenaltyFactor(d["payload"]["penalty_factor"]),
             )
         else:
             payload = MonitorError(
