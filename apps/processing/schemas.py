@@ -52,7 +52,17 @@ class HeadPose(NamedTuple):
         return HeadDirection(x=self.yaw, y=self.pitch)
 
 
-class FacialLandmarks2d(np.ndarray):
+class BaseFacialLandmarks(np.ndarray):
+    @property
+    def left_eye(self) -> np.ndarray:
+        return self[36:42]
+
+    @property
+    def right_eye(self) -> np.ndarray:
+        return self[42:48]
+
+
+class FacialLandmarks2d(BaseFacialLandmarks, np.ndarray):
     """A fixed-shape np.ndarray representing 2D facial landmarks.
 
     The landmarks are stored as a np.ndarray of shape `(LANDMARKS_NUM, 2)`,
@@ -77,7 +87,7 @@ class FacialLandmarks2d(np.ndarray):
         return obj
 
 
-class FacialLandmarks3d(np.ndarray):
+class FacialLandmarks3d(BaseFacialLandmarks, np.ndarray):
     """A fixed-shape np.ndarray representing 3D facial landmarks.
 
     The landmarks are stored as a np.ndarray of shape `(LANDMARKS_NUM, 3)`,

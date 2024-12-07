@@ -4,9 +4,10 @@ from datetime import datetime
 
 import cv2
 import numpy as np
+from scipy.spatial import distance
 
 from libs.ipc import BasePublisher, BaseSubscriber
-from libs.schemas.analysis_msg import AnalysisMsg
+from libs.schemas.analysis_msg import AnalysisMsg, BothEyeAspectRatio
 from libs.types import MatLike
 
 from .constants import MODELS_DIR
@@ -74,6 +75,10 @@ class App:
                 self._head_pose_estimator.set_image_size(*frame.shape[:2])
             pose = self._head_pose_estimator.estimate(landmarks)
 
+            both_ear = BothEyeAspectRatio(
+                left=self.calc_ear(landmarks.left_eye), right=self.calc_ear(landmarks.right_eye)
+            )
+
             nose_tip_2d = landmarks[30]
             pose_2d = self.project_pose(pose)
             end_point = (nose_tip_2d + np.array(pose_2d) * 20).astype(int)
@@ -81,12 +86,20 @@ class App:
 
             self._analysis_msg_publisher.publish(
                 AnalysisMsg(
-                    timestamp=datetime.now(), is_absent=False, head_direction=pose.to_direction()
+                    timestamp=datetime.now(),
+                    is_absent=False,
+                    both_eye_aspect_ratio=both_ear,
+                    head_direction=pose.to_direction(),
                 )
             )
         else:
             self._analysis_msg_publisher.publish(
-                AnalysisMsg(timestamp=datetime.now(), is_absent=True, head_direction=None)
+                AnalysisMsg(
+                    timestamp=datetime.now(),
+                    is_absent=True,
+                    both_eye_aspect_ratio=None,
+                    head_direction=None,
+                )
             )
 
         curr_time = time.time()
@@ -106,3 +119,10 @@ class App:
         x, y = np.sin(np.radians(pose.yaw)), -np.sin(np.radians(pose.pitch))
         norm = np.linalg.norm((x, y))
         return (float(x / norm), float(y / norm))
+
+    @staticmethod
+    def calc_ear(eye_landmarks: np.ndarray) -> float:
+        dist_p2_p6 = distance.euclidean(eye_landmarks[1], eye_landmarks[5])
+        dist_p3_p5 = distance.euclidean(eye_landmarks[2], eye_landmarks[4])
+        dist_p1_p4 = distance.euclidean(eye_landmarks[0], eye_landmarks[3])
+        return float((dist_p2_p6 + dist_p3_p5) / (2.0 * dist_p1_p4))
