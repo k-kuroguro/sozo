@@ -20,7 +20,9 @@ class AnalysisMsg:
     """Represent an analysis result.
 
     Attributes:
-        head_direction (HeadDirection): The detected head direction.
+        timestamp (datetime): Timestamp indicating when the analysis result was recorded.
+        is_absent (bool): Indicates whether the face is absent in the frame
+        head_direction (HeadDirection | None): The detected head direction. If the face is absent, this field is None.
     """
 
     timestamp: datetime
