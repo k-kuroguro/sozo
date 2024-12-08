@@ -18,6 +18,10 @@ class PenaltyFactor(Flag):
     IS_LOOKING_AWAY = auto()
     """The person is looking away."""
 
+    def get_active_factor_names(self) -> list[str]:
+        """Get the names of active factors."""
+        return [factor.name for factor in self.__class__ if self & factor]
+
 
 @dataclass(slots=True, frozen=True)
 class ConcentrationStatus:

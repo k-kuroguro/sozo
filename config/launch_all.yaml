@@ -5,6 +5,7 @@ web:
     port: 8080
     monitor_subscriber_addr: "/tmp/monitoring"
     monitor_topic: "monitoring"
+    evolution_threshold: 5000
 
 local:
   enabled: true
@@ -15,6 +16,8 @@ local:
     frame_topic: "frame"
     analysis_subscriber_addr: "/tmp/analysis"
     analysis_topic: "analysis"
+    head_direction_std_weight: 60
+    ear_threshold: 0.30
 
 processing:
   enabled: true

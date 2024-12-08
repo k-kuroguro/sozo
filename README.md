@@ -8,6 +8,13 @@ $ cmake --version # Required for building dlib
 cmake version 3.28.3
 ```
 
+## Setup
+
+Download images required for the web app.
+```sh
+$ uv run scripts/download_images.py
+```
+
 ## Running in production
 
 If you want to run all the apps on the same computer,

@@ -9,6 +9,7 @@ class WebParameters:
     port: int
     monitor_subscriber_addr: str
     monitor_topic: str
+    evolution_threshold: float = 5000
 
 
 @dataclass(slots=True, frozen=True)

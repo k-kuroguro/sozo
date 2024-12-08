@@ -34,7 +34,7 @@ def main() -> None:
             web_params.monitor_topic,
             monitor_msg_serializer,
         )
-        web_app = WebApp(monitor_msg_subscriber)
+        web_app = WebApp(monitor_msg_subscriber, evolution_threshold=web_params.evolution_threshold)
         apps.append((web_app, {"host": web_params.host, "port": web_params.port}))
 
     if config.local.enabled:

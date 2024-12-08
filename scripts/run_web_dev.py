@@ -1,3 +1,4 @@
+import argparse
 import datetime
 import time
 from random import random
@@ -24,7 +25,7 @@ class FakeSubscriber(BaseSubscriber[MonitorMsg]):
             msg = MonitorMsg(
                 timestamp=datetime.datetime.now(),
                 payload=ConcentrationStatus(
-                    overall_score=random(),
+                    overall_score=random() * 100,
                     penalty_factor=PenaltyFactor.NONE,
                 ),
             )
@@ -38,8 +39,12 @@ class FakeSubscriber(BaseSubscriber[MonitorMsg]):
 
 
 def main() -> None:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--evolution-threshold", type=float, default=5000)
+    args = parser.parse_args()
+
     subscriber = FakeSubscriber()
-    app = App(subscriber)
+    app = App(subscriber, evolution_threshold=args.evolution_threshold)
     app.run("0.0.0.0", 8080, log_level="debug")
 
 

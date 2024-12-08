@@ -13,18 +13,26 @@ from libs.schemas.monitor_msg import ConcentrationStatus, MonitorError
 from .constants import TEMPLATES_DIR
 from .database import get_session_generator
 from .schemas import AggregatedConcentrationStatus
-from .store import IncomingDataStore
+from .store import AccumalatedScoreStore, IncomingDataStore, ParameterStore
 
 router = APIRouter()
 
 templates = Jinja2Templates(directory=TEMPLATES_DIR)
 
 IncomingDataStoreDep = Annotated[IncomingDataStore, Depends(IncomingDataStore)]
+ParameterStoreDep = Annotated[ParameterStore, Depends(ParameterStore)]
 
 
 @router.get("/", response_class=HTMLResponse)
-async def root(request: Request) -> HTMLResponse:
-    return templates.TemplateResponse("index.html", {"request": request})
+async def root(request: Request, store: ParameterStoreDep) -> HTMLResponse:
+    return templates.TemplateResponse(
+        "index.html",
+        {
+            "request": request,
+            "evolution_threshold": store.evolution_threshold,
+            "is_evolved": 1 if store.is_evolved else 0,
+        },
+    )
 
 
 class EventType(str, Enum):
@@ -43,11 +51,19 @@ class EventType(str, Enum):
         return self.value
 
 
+def to_json(status_or_error: ConcentrationStatus | MonitorError) -> dict:
+    if isinstance(status_or_error, ConcentrationStatus):
+        return {
+            "overall_score": status_or_error.overall_score,
+            "penalty_factor": status_or_error.penalty_factor.get_active_factor_names(),
+            "accumulated_score": AccumalatedScoreStore().accumalated_score,
+        }
+    return {"type": status_or_error.type.name, "msg": status_or_error.msg}
+
+
 def to_sse_msg(status_or_error: ConcentrationStatus | MonitorError) -> str:
-    data = {}
-    for field in fields(status_or_error):
-        data[field.name] = str(getattr(status_or_error, field.name))
     event = EventType.from_status_or_error(status_or_error)
+    data = to_json(status_or_error)
     return f"event: {event}\ndata: {data}\n\n"
 
 

@@ -4,25 +4,43 @@
    <meta charset="utf-8">
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
    <link rel="stylesheet" href="/static/css/default.css">
+   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.5.0/dist/chart.min.js" defer></script>
    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment.js" defer></script>
    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/locale/ja.js" defer></script>
    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-moment@1.0.0" defer></script>
+   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" defer></script>
+   <script>
+      const EVOLUTION_THRESHOLD = {{ evolution_threshold }};
+      let is_evolved = {{ is_evolved }};
+   </script>
    <script src="/static/js/index.js" defer></script>
-   <title>Sample Page</title>
+   <title>Concentration Pet</title>
 </head>
 
 <body>
-   <h1>Realtime Score</h1>
-   <div id="score"></div>
-   <h1>Record</h1>
-   <canvas id="statusChart" width="400" height="200"></canvas>
-   <div>
-      <label><input type="radio" name="unit" value="by-date" id="by-date" checked>By date</label>
-      <label><input type="radio" name="unit" value="by-hour" id="by-hour">By hour</label>
+   <div class="container-fluid h-100 w-100">
+      <div class="row h-100">
+         <div class="col-8 h-100 p-0">
+            <div id="pet-container">
+               {% if is_evolved %}
+               <img src="/static/images/rabbit.png" id="pet">
+               {% else %}
+               <img src="/static/images/rabbit.png" id="pet" style="display: none;">
+               <img src="/static/images/egg.png" id="egg">
+               {% endif %}
+            </div>
+         </div>
+         <div class="col-4 h-100 pt-2">
+            <div id="score-container">
+               <p>現在スコア: <span id="current-score">0.000</span></p>
+               <p>累積スコア: <span id="accumulated-score">0.000</span></p>
+            </div>
+            <div id="penalty-factor-container">
+               <p>主要減点要素:</p>
+               <ul id="penalty-factor-list"></ul>
+            </div>
+         </div>
+      </div>
    </div>
-   <div>
-      <input type="datetime-local" id="datetime" value="2021-01-01T00:00:00">
-   </div>
-   <button id="plotBtn">Plot</button>
 </body>
