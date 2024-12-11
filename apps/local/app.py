@@ -4,8 +4,9 @@ from typing import Deque
 
 import cv2
 import numpy as np
+import requests
 
-from libs.ipc import BasePublisher, BaseSubscriber
+from libs.ipc import AnalysisMsgSerializer, BasePublisher, BaseSubscriber
 from libs.schemas.analysis_msg import AnalysisMsg
 from libs.schemas.monitor_msg import ConcentrationStatus, MonitorMsg, PenaltyFactor
 from libs.types import MatLike
@@ -19,6 +20,7 @@ class App:
         monitor_msg_publisher: BasePublisher[MonitorMsg],
         frame_publisher: BasePublisher[MatLike],
         analysis_msg_subscriber: BaseSubscriber[AnalysisMsg],
+        url: str,
         *,
         video_path_or_device_id: str | int = 0,
         max_buffer_size: int = 10,
@@ -40,26 +42,40 @@ class App:
 
         self._analysis_msg_buffer: Deque[AnalysisMsg] = deque(maxlen=max_buffer_size)
 
+        self._url = url
+        self._ser = AnalysisMsgSerializer()
+
     def run(self) -> None:
         self._analysis_msg_subscriber.start(self._on_analysis_msg)
         cap = cv2.VideoCapture(self._video_path_or_device_id)
 
         while 1:
+            # try:
+            #     content = requests.get(f"http://{self._url}").content
+            #     analysis_msg = self._ser.deserialize(content)
+            #     if len(self._analysis_msg_buffer) == 0:
+            #         self._on_analysis_msg(analysis_msg)
+            #     elif analysis_msg.timestamp > self._analysis_msg_buffer[-1].timestamp:
+            #         self._on_analysis_msg(analysis_msg)
+            # except Exception as e:
+            #     print(e)
+
             ret, frame = cap.read()
             if not ret:
                 cap.set(cv2.CAP_PROP_POS_FRAMES, 0)
                 continue
 
-            if len(self._analysis_msg_buffer) > 0:
-                latest = self._analysis_msg_buffer[-1]
-                if datetime.now() - latest.timestamp > CLEAR_BUFFER_INTERVAL:
-                    self._analysis_msg_buffer.clear()
+            #if len(self._analysis_msg_buffer) > 0:
+            #    latest = self._analysis_msg_buffer[-1]
+            #    if datetime.now() - latest.timestamp > CLEAR_BUFFER_INTERVAL:
+            #        self._analysis_msg_buffer.clear()
 
             self._frame_publisher.publish(frame)
             self._publish_monitor_msg()
 
     def _publish_monitor_msg(self) -> None:
         score, factor = self._calc_score()
+        print(score, factor)
         self._monitor_msg_publisher.publish(
             MonitorMsg(
                 timestamp=datetime.now(),
@@ -96,7 +112,7 @@ class App:
         )
         head_direction_mean = np.mean(head_directions, axis=0)
         is_head_down = head_direction_mean[1] < 0.0
-        if not is_head_down and abs(head_direction_mean[0]) >= self._looking_away_x_threshold:
+        if not is_head_down:# and abs(head_direction_mean[0]) >= self._looking_away_x_threshold:
             score -= self._looking_away_penalty
             factor |= PenaltyFactor.IS_LOOKING_AWAY
 
@@ -107,6 +123,7 @@ class App:
 
     def _on_analysis_msg(self, analysis_msg: AnalysisMsg) -> None:
         self._analysis_msg_buffer.append(analysis_msg)
+        print(analysis_msg)
 
     def _check_drowsiness(self, ears: np.ndarray) -> bool:
         half_len = 0.5 * len(ears)

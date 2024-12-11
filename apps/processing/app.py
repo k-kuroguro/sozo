@@ -11,7 +11,7 @@ from libs.schemas.analysis_msg import AnalysisMsg, BothEyeAspectRatio
 from libs.types import MatLike
 
 from .constants import MODELS_DIR
-from .face_detector import FaceDetector
+from .face_detector import FaceDetector, FaceDetector2, FaceDetector3
 from .facial_landmarks_detector import FacialLandmarksDetector
 from .head_pose_estimator import HeadPoseEstimator
 from .schemas import HeadPose
@@ -28,9 +28,12 @@ class App:
         self._frame_subscriber = frame_subscriber
         self._analysis_msg_publisher = analysis_msg_publisher
 
-        self._face_detector = FaceDetector(
-            os.path.join(MODELS_DIR, "opencv_face_detector_uint8.pb"),
-            os.path.join(MODELS_DIR, "opencv_face_detector.pbtxt"),
+        #self._face_detector = FaceDetector(
+        #    os.path.join(MODELS_DIR, "opencv_face_detector_uint8.pb"),
+        #    os.path.join(MODELS_DIR, "opencv_face_detector.pbtxt"),
+        #)
+        self._face_detector = FaceDetector3(
+            #os.path.join(MODELS_DIR, "haarcascade_frontalface_alt2.xml")
         )
         self._facial_landmarks_detector = FacialLandmarksDetector(
             os.path.join(MODELS_DIR, "shape_predictor_68_face_landmarks_GTX.dat")

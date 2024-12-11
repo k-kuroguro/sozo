@@ -65,7 +65,7 @@ class AccumalatedScoreStore:
         self._accumalated_score: float = 0
 
     def add(self, score: float) -> None:
-        self._accumalated_score += score
+        self._accumalated_score += score / 10
 
     @property
     def accumalated_score(self) -> float:

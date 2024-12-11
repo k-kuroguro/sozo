@@ -13,7 +13,7 @@ local:
     monitor_topic: "monitoring"
     frame_publisher_addr: "0.0.0.0:5555"
     frame_topic: "frame"
-    analysis_subscriber_addr: "10.27.72.13:5555"
+    analysis_subscriber_addr: "192.168.137.1:8000"
     analysis_topic: "analysis"
 
 processing:

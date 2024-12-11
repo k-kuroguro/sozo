@@ -58,6 +58,7 @@ def main() -> None:
             monitor_msg_publisher,
             frame_publisher,
             analysis_msg_subscriber,
+            url=local_params.analysis_subscriber_addr,
             video_path_or_device_id=local_params.video_path_or_device_id,
             max_buffer_size=local_params.max_buffer_size,
             ear_threshold=local_params.ear_threshold,
